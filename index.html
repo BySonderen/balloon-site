@@ -105,24 +105,147 @@
 
   @keyframes shiver {
     0%   { transform: translate(0, 0) rotate(0deg); }
-    10%  { transform: translate(-3px, 2px) rotate(-2deg); }
-    20%  { transform: translate(3px, -2px) rotate(2deg); }
-    30%  { transform: translate(-2px, -3px) rotate(-1deg); }
-    40%  { transform: translate(2px, 3px) rotate(1deg); }
-    50%  { transform: translate(-3px, 1px) rotate(-2deg); }
-    60%  { transform: translate(3px, -1px) rotate(2deg); }
-    70%  { transform: translate(-1px, 3px) rotate(-1deg); }
-    80%  { transform: translate(1px, -3px) rotate(1deg); }
-    90%  { transform: translate(-2px, 2px) rotate(-2deg); }
+    5%   { transform: translate(-6px, 4px) rotate(-4deg); }
+    10%  { transform: translate(7px, -3px) rotate(5deg); }
+    15%  { transform: translate(-5px, -6px) rotate(-3deg); }
+    20%  { transform: translate(6px, 5px) rotate(4deg); }
+    25%  { transform: translate(-8px, 2px) rotate(-5deg); }
+    30%  { transform: translate(5px, -5px) rotate(3deg); }
+    35%  { transform: translate(-4px, 7px) rotate(-4deg); }
+    40%  { transform: translate(7px, -2px) rotate(5deg); }
+    45%  { transform: translate(-6px, -4px) rotate(-3deg); }
+    50%  { transform: translate(8px, 3px) rotate(4deg); }
+    55%  { transform: translate(-5px, 6px) rotate(-5deg); }
+    60%  { transform: translate(6px, -6px) rotate(3deg); }
+    65%  { transform: translate(-7px, 2px) rotate(-4deg); }
+    70%  { transform: translate(4px, 5px) rotate(5deg); }
+    75%  { transform: translate(-6px, -3px) rotate(-3deg); }
+    80%  { transform: translate(7px, 4px) rotate(4deg); }
+    85%  { transform: translate(-5px, -5px) rotate(-5deg); }
+    90%  { transform: translate(6px, 3px) rotate(3deg); }
+    95%  { transform: translate(-4px, -2px) rotate(-2deg); }
     100% { transform: translate(0, 0) rotate(0deg); }
   }
-  .shiver { animation: shiver 0.5s ease-in-out; }
+  .shiver { animation: shiver 0.8s ease-in-out; }
+
+  /* ---- Name Input ---- */
+  #nameField {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    text-align: center;
+  }
+  #nameInput {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: 3px solid rgba(255,255,255,0.7);
+    border-radius: 25px;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(8px);
+    outline: none;
+    color: #2c3e50;
+    font-weight: bold;
+    text-align: center;
+    width: 260px;
+    transition: border-color 0.3s;
+  }
+  #nameInput::placeholder { color: #7f8c8d; font-weight: normal; }
+  #nameInput:focus { border-color: #e0243a; }
+
+  /* ---- Sun ---- */
+  #sun {
+    position: absolute;
+    top: 40px;
+    right: 80px;
+    width: 120px;
+    height: 120px;
+    z-index: 2;
+  }
+  .sun-body {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at 40% 40%, #fff4a3, #f9d71c 40%, #f0a500);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 40px 15px rgba(249,215,28,0.35), 0 0 80px 30px rgba(249,215,28,0.15);
+  }
+  .sun-ray {
+    position: absolute;
+    width: 8px;
+    height: 25px;
+    background: #f9d71c;
+    border-radius: 4px;
+    top: 50%;
+    left: 50%;
+    transform-origin: center -35px;
+    opacity: 0.6;
+  }
+  .sun-face {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+  }
+  .sun-eye {
+    position: absolute;
+    top: 40px;
+    width: 12px;
+    height: 14px;
+    background: #5d4037;
+    border-radius: 50%;
+    transition: transform 0.15s;
+  }
+  .sun-eye.left { left: 35px; }
+  .sun-eye.right { right: 35px; }
+  .sun-eye.wink {
+    height: 3px;
+    border-radius: 3px;
+    top: 46px;
+  }
+  .sun-mouth {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35px;
+    height: 16px;
+    border-bottom: 4px solid #5d4037;
+    border-radius: 0 0 20px 20px;
+  }
+  .sun-cheek {
+    position: absolute;
+    top: 52px;
+    width: 16px;
+    height: 10px;
+    background: rgba(255,120,100,0.35);
+    border-radius: 50%;
+  }
+  .sun-cheek.left { left: 22px; }
+  .sun-cheek.right { right: 22px; }
 </style>
 </head>
 <body>
 
+<!-- Sun -->
+<div id="sun">
+  <div class="sun-body">
+    <div class="sun-face">
+      <div class="sun-eye left" id="sunEyeL"></div>
+      <div class="sun-eye right" id="sunEyeR"></div>
+      <div class="sun-mouth"></div>
+      <div class="sun-cheek left"></div>
+      <div class="sun-cheek right"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Welcome Text -->
 <div id="welcome">Welcome Dude!</div>
+
+<!-- Name Input -->
+<div id="nameField">
+  <input type="text" id="nameInput" placeholder="Enter your name..." maxlength="20">
+</div>
 
 <!-- Balloon -->
 <div id="balloon">
@@ -133,15 +256,35 @@
 </div>
 
 <script>
+/* =========  SUN RAYS  ========= */
+const sunBody = document.querySelector('.sun-body');
+for (let i = 0; i < 12; i++) {
+  const ray = document.createElement('div');
+  ray.className = 'sun-ray';
+  ray.style.transform = `rotate(${i * 30}deg) translateY(-82px)`;
+  sunBody.appendChild(ray);
+}
+
+/* =========  SUN WINK  ========= */
+const eyeL = document.getElementById('sunEyeL');
+const eyeR = document.getElementById('sunEyeR');
+
+function sunWink() {
+  eyeR.classList.add('wink');
+  setTimeout(() => eyeR.classList.remove('wink'), 400);
+  setTimeout(sunWink, 4000 + Math.random() * 6000);
+}
+setTimeout(sunWink, 3000);
+
 /* =========  BALLOON MOVEMENT  ========= */
 const balloon = document.getElementById('balloon');
-const body    = document.getElementById('balloonBody');
-const knot    = body.querySelector('.balloon-knot');
+const bBody   = document.getElementById('balloonBody');
+const knot    = bBody.querySelector('.balloon-knot');
 
 let bx = window.innerWidth / 2 - 45;
 let by = window.innerHeight / 2 - 55;
 let targetX = bx, targetY = by;
-const speed = 0.012;          // lerp factor (50% faster)
+const speed = 0.012;
 const margin = 60;
 
 function pickTarget() {
@@ -169,11 +312,11 @@ balloon.addEventListener('click', () => {
   const c = isRed ? '#27ae60' : '#e0243a';
   const k = isRed ? '#1e8449' : '#c01e32';
   isRed = !isRed;
-  body.style.background = c;
+  bBody.style.background = c;
   knot.style.background = k;
-  body.classList.remove('pop');
-  void body.offsetWidth;          // reflow trick
-  body.classList.add('pop');
+  bBody.classList.remove('pop');
+  void bBody.offsetWidth;
+  bBody.classList.add('pop');
 });
 
 /* =========  CLOUDS  ========= */
@@ -188,7 +331,6 @@ function spawnCloud() {
   c.style.left   = -size + 'px';
   c.style.opacity = 0.7 + Math.random() * 0.25;
 
-  // puffs
   const before = document.createElement('style');
   const id = 'c' + Math.random().toString(36).slice(2, 8);
   c.id = id;
@@ -214,7 +356,6 @@ function spawnCloud() {
   requestAnimationFrame(drift);
 }
 
-// initial clouds
 for (let i = 0; i < 6; i++) setTimeout(() => spawnCloud(), i * 800);
 setInterval(spawnCloud, 6000 + Math.random() * 4000);
 
@@ -247,7 +388,6 @@ function spawnPlane() {
   requestAnimationFrame(fly);
 }
 
-// first plane after a short delay, then every 8-18s
 setTimeout(spawnPlane, 3000);
 setInterval(spawnPlane, 8000 + Math.random() * 10000);
 
@@ -262,9 +402,16 @@ welcome.addEventListener('click', () => {
   welcome.classList.add('shiver');
 
   const newX = 60 + Math.random() * (window.innerWidth - 400);
-  const newY = 40 + Math.random() * (window.innerHeight - 120);
+  const newY = 40 + Math.random() * (window.innerHeight - 160);
   welcome.style.left = newX + 'px';
   welcome.style.top = newY + 'px';
+});
+
+/* =========  NAME INPUT  ========= */
+const nameInput = document.getElementById('nameInput');
+nameInput.addEventListener('input', () => {
+  const name = nameInput.value.trim();
+  welcome.textContent = name ? `Welcome ${name}!` : 'Welcome Dude!';
 });
 
 /* =========  RESIZE SAFETY  ========= */
