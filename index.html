@@ -89,9 +89,40 @@
     100% { transform: scale(1); opacity: 1; }
   }
   .pop { animation: pop 0.35s ease-out; }
+
+  /* ---- Welcome Text ---- */
+  #welcome {
+    position: absolute;
+    font-size: 48px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+    z-index: 5;
+    user-select: none;
+    transition: left 0.6s ease, top 0.6s ease;
+  }
+
+  @keyframes shiver {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    10%  { transform: translate(-3px, 2px) rotate(-2deg); }
+    20%  { transform: translate(3px, -2px) rotate(2deg); }
+    30%  { transform: translate(-2px, -3px) rotate(-1deg); }
+    40%  { transform: translate(2px, 3px) rotate(1deg); }
+    50%  { transform: translate(-3px, 1px) rotate(-2deg); }
+    60%  { transform: translate(3px, -1px) rotate(2deg); }
+    70%  { transform: translate(-1px, 3px) rotate(-1deg); }
+    80%  { transform: translate(1px, -3px) rotate(1deg); }
+    90%  { transform: translate(-2px, 2px) rotate(-2deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+  .shiver { animation: shiver 0.5s ease-in-out; }
 </style>
 </head>
 <body>
+
+<!-- Welcome Text -->
+<div id="welcome">Welcome Dude!</div>
 
 <!-- Balloon -->
 <div id="balloon">
@@ -110,7 +141,7 @@ const knot    = body.querySelector('.balloon-knot');
 let bx = window.innerWidth / 2 - 45;
 let by = window.innerHeight / 2 - 55;
 let targetX = bx, targetY = by;
-const speed = 0.008;          // lerp factor
+const speed = 0.012;          // lerp factor (50% faster)
 const margin = 60;
 
 function pickTarget() {
@@ -118,7 +149,7 @@ function pickTarget() {
   targetY = margin + Math.random() * (window.innerHeight - 2 * margin - 190);
 }
 pickTarget();
-setInterval(pickTarget, 3000 + Math.random() * 3000);
+setInterval(pickTarget, 2000 + Math.random() * 2000);
 
 let wobble = 0;
 function moveBalloon() {
@@ -219,6 +250,22 @@ function spawnPlane() {
 // first plane after a short delay, then every 8-18s
 setTimeout(spawnPlane, 3000);
 setInterval(spawnPlane, 8000 + Math.random() * 10000);
+
+/* =========  WELCOME TEXT  ========= */
+const welcome = document.getElementById('welcome');
+welcome.style.left = (window.innerWidth / 2 - 150) + 'px';
+welcome.style.top = (window.innerHeight / 2 - 30) + 'px';
+
+welcome.addEventListener('click', () => {
+  welcome.classList.remove('shiver');
+  void welcome.offsetWidth;
+  welcome.classList.add('shiver');
+
+  const newX = 60 + Math.random() * (window.innerWidth - 400);
+  const newY = 40 + Math.random() * (window.innerHeight - 120);
+  welcome.style.left = newX + 'px';
+  welcome.style.top = newY + 'px';
+});
 
 /* =========  RESIZE SAFETY  ========= */
 window.addEventListener('resize', pickTarget);
