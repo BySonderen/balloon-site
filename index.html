@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balloon in the Sky</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #87CEEB 0%, #B0E0F6 40%, #d4effc 100%);
+    cursor: default;
+  }
+
+  /* ---- Clouds ---- */
+  .cloud {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.9;
+    filter: blur(1px);
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  /* ---- Plane ---- */
+  .plane {
+    position: absolute;
+    font-size: 32px;
+    will-change: transform;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ---- Balloon ---- */
+  #balloon {
+    position: absolute;
+    width: 140px;
+    height: 170px;
+    cursor: pointer;
+    z-index: 10;
+    transition: filter 0.15s;
+    will-change: transform;
+  }
+  #balloon:hover { filter: brightness(1.15); }
+
+  .balloon-body {
+    width: 140px;
+    height: 170px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    box-shadow: inset -12px -8px 20px rgba(0,0,0,0.15), inset 10px 10px 20px rgba(255,255,255,0.35);
+    transition: background 0.3s;
+  }
+
+  .balloon-knot {
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    border-radius: 0 0 4px 0;
+  }
+
+  .balloon-string {
+    width: 2px;
+    height: 80px;
+    background: rgba(0,0,0,0.25);
+    position: absolute;
+    left: 50%;
+    top: 170px;
+    transform: translateX(-50%);
+    border-radius: 0 0 2px 2px;
+  }
+
+  /* pop animation */
+  @keyframes pop {
+    0%   { transform: scale(1); opacity: 1; }
+    50%  { transform: scale(1.3); opacity: 0.6; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop { animation: pop 0.35s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- Balloon -->
+<div id="balloon">
+  <div class="balloon-body" id="balloonBody" style="background: #e0243a;">
+    <div class="balloon-knot" style="background: #c01e32;"></div>
+  </div>
+  <div class="balloon-string"></div>
+</div>
+
+<script>
+/* =========  BALLOON MOVEMENT  ========= */
+const balloon = document.getElementById('balloon');
+const body    = document.getElementById('balloonBody');
+const knot    = body.querySelector('.balloon-knot');
+
+let bx = window.innerWidth / 2 - 45;
+let by = window.innerHeight / 2 - 55;
+let targetX = bx, targetY = by;
+const speed = 0.008;          // lerp factor
+const margin = 60;
+
+function pickTarget() {
+  targetX = margin + Math.random() * (window.innerWidth  - 2 * margin - 90);
+  targetY = margin + Math.random() * (window.innerHeight - 2 * margin - 190);
+}
+pickTarget();
+setInterval(pickTarget, 3000 + Math.random() * 3000);
+
+let wobble = 0;
+function moveBalloon() {
+  bx += (targetX - bx) * speed;
+  by += (targetY - by) * speed;
+  wobble += 0.03;
+  const sway = Math.sin(wobble) * 8;
+  balloon.style.transform = `translate(${bx}px, ${by}px) rotate(${sway}deg)`;
+  requestAnimationFrame(moveBalloon);
+}
+moveBalloon();
+
+/* =========  BALLOON CLICK  ========= */
+let isRed = true;
+
+balloon.addEventListener('click', () => {
+  const c = isRed ? '#27ae60' : '#e0243a';
+  const k = isRed ? '#1e8449' : '#c01e32';
+  isRed = !isRed;
+  body.style.background = c;
+  knot.style.background = k;
+  body.classList.remove('pop');
+  void body.offsetWidth;          // reflow trick
+  body.classList.add('pop');
+});
+
+/* =========  CLOUDS  ========= */
+function spawnCloud() {
+  const c = document.createElement('div');
+  c.className = 'cloud';
+  const size = 60 + Math.random() * 100;
+  const top  = Math.random() * (window.innerHeight * 0.55);
+  c.style.width  = size + 'px';
+  c.style.height = size * 0.6 + 'px';
+  c.style.top    = top + 'px';
+  c.style.left   = -size + 'px';
+  c.style.opacity = 0.7 + Math.random() * 0.25;
+
+  // puffs
+  const before = document.createElement('style');
+  const id = 'c' + Math.random().toString(36).slice(2, 8);
+  c.id = id;
+  const p1w = size * (0.5 + Math.random() * 0.3);
+  const p2w = size * (0.4 + Math.random() * 0.3);
+  before.textContent = `
+    #${id}::before { width:${p1w}px; height:${p1w*0.7}px; top:-${p1w*0.35}px; left:${size*0.15}px; }
+    #${id}::after  { width:${p2w}px; height:${p2w*0.7}px; top:-${p2w*0.2}px;  left:${size*0.45}px; }
+  `;
+  document.head.appendChild(before);
+  document.body.appendChild(c);
+
+  const duration = 30000 + Math.random() * 40000;
+  const dest = window.innerWidth + size;
+  const start = performance.now();
+
+  function drift(now) {
+    const t = (now - start) / duration;
+    if (t > 1) { c.remove(); before.remove(); return; }
+    c.style.left = (-size + t * (dest + size)) + 'px';
+    requestAnimationFrame(drift);
+  }
+  requestAnimationFrame(drift);
+}
+
+// initial clouds
+for (let i = 0; i < 6; i++) setTimeout(() => spawnCloud(), i * 800);
+setInterval(spawnCloud, 6000 + Math.random() * 4000);
+
+/* =========  PLANES  ========= */
+function spawnPlane() {
+  const p = document.createElement('div');
+  p.className = 'plane';
+  const goRight = Math.random() > 0.5;
+  const top = 30 + Math.random() * (window.innerHeight * 0.35);
+  const sz  = 48 + Math.random() * 24;
+  p.style.fontSize = sz + 'px';
+  p.style.top = top + 'px';
+  p.textContent = goRight ? '✈️' : '✈️';
+  p.style.transform = goRight ? 'scaleX(1)' : 'scaleX(-1)';
+
+  const startX = goRight ? -80 : window.innerWidth + 80;
+  const endX   = goRight ? window.innerWidth + 80 : -80;
+  p.style.left = startX + 'px';
+  document.body.appendChild(p);
+
+  const duration = 12000 + Math.random() * 10000;
+  const start = performance.now();
+
+  function fly(now) {
+    const t = (now - start) / duration;
+    if (t > 1) { p.remove(); return; }
+    p.style.left = (startX + t * (endX - startX)) + 'px';
+    requestAnimationFrame(fly);
+  }
+  requestAnimationFrame(fly);
+}
+
+// first plane after a short delay, then every 8-18s
+setTimeout(spawnPlane, 3000);
+setInterval(spawnPlane, 8000 + Math.random() * 10000);
+
+/* =========  RESIZE SAFETY  ========= */
+window.addEventListener('resize', pickTarget);
+</script>
+</body>
+</html>
