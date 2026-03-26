@@ -11,7 +11,7 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(180deg, #87CEEB 0%, #B0E0F6 40%, #d4effc 100%);
+    background: linear-gradient(180deg, #74b9d9 0%, #9ccde6 40%, #bde0ef 100%);
     cursor: default;
   }
 
@@ -41,15 +41,31 @@
     font-size: 52px;
     display: inline-block;
   }
-  .sky-text {
+
+  /* ---- Smoke puffs ---- */
+  .smoke-puff {
     position: absolute;
-    font-size: 22px;
-    font-weight: bold;
-    color: rgba(255,255,255,0.85);
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-    white-space: nowrap;
-    letter-spacing: 4px;
-    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 50%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ---- Smoke text ---- */
+  .smoke-letter {
+    position: absolute;
+    font-size: 72px;
+    font-weight: 900;
+    font-family: 'Arial Black', Arial, sans-serif;
+    color: transparent;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.7) 60%, transparent 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: blur(1.5px);
+    pointer-events: none;
+    z-index: 2;
+    user-select: none;
+    text-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.4);
   }
 
   /* ---- Balloon ---- */
@@ -95,7 +111,6 @@
     border-radius: 0 0 2px 2px;
   }
 
-  /* pop animation */
   @keyframes pop {
     0%   { transform: scale(1); opacity: 1; }
     50%  { transform: scale(1.3); opacity: 0.6; }
@@ -195,10 +210,7 @@
     transform-origin: center -35px;
     opacity: 0.6;
   }
-  .sun-face {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-  }
+  .sun-face { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
   .sun-eye {
     position: absolute;
     top: 40px;
@@ -210,11 +222,7 @@
   }
   .sun-eye.left { left: 35px; }
   .sun-eye.right { right: 35px; }
-  .sun-eye.wink {
-    height: 3px;
-    border-radius: 3px;
-    top: 46px;
-  }
+  .sun-eye.wink { height: 3px; border-radius: 3px; top: 46px; }
   .sun-mouth {
     position: absolute;
     bottom: 32px;
@@ -279,9 +287,7 @@ for (let i = 0; i < 12; i++) {
 }
 
 /* =========  SUN WINK  ========= */
-const eyeL = document.getElementById('sunEyeL');
 const eyeR = document.getElementById('sunEyeR');
-
 function sunWink() {
   eyeR.classList.add('wink');
   setTimeout(() => eyeR.classList.remove('wink'), 400);
@@ -297,7 +303,7 @@ const knot    = bBody.querySelector('.balloon-knot');
 let bx = window.innerWidth / 2 - 35;
 let by = window.innerHeight / 2 - 42;
 let targetX = bx, targetY = by;
-const speed = 0.012;
+const bSpeed = 0.012;
 const bMargin = 60;
 
 function pickTarget() {
@@ -307,20 +313,18 @@ function pickTarget() {
 pickTarget();
 setInterval(pickTarget, 2000 + Math.random() * 2000);
 
-let wobble = 0;
+let wob = 0;
 function moveBalloon() {
-  bx += (targetX - bx) * speed;
-  by += (targetY - by) * speed;
-  wobble += 0.03;
-  const sway = Math.sin(wobble) * 8;
-  balloon.style.transform = `translate(${bx}px, ${by}px) rotate(${sway}deg)`;
+  bx += (targetX - bx) * bSpeed;
+  by += (targetY - by) * bSpeed;
+  wob += 0.03;
+  balloon.style.transform = `translate(${bx}px, ${by}px) rotate(${Math.sin(wob) * 8}deg)`;
   requestAnimationFrame(moveBalloon);
 }
 moveBalloon();
 
 /* =========  BALLOON CLICK  ========= */
 let isRed = true;
-
 balloon.addEventListener('click', () => {
   const c = isRed ? '#27ae60' : '#e0243a';
   const k = isRed ? '#1e8449' : '#c01e32';
@@ -344,123 +348,169 @@ function spawnCloud() {
   c.style.left   = -size + 'px';
   c.style.opacity = 0.7 + Math.random() * 0.25;
 
-  const before = document.createElement('style');
+  const st = document.createElement('style');
   const id = 'c' + Math.random().toString(36).slice(2, 8);
   c.id = id;
   const p1w = size * (0.5 + Math.random() * 0.3);
   const p2w = size * (0.4 + Math.random() * 0.3);
-  before.textContent = `
+  st.textContent = `
     #${id}::before { width:${p1w}px; height:${p1w*0.7}px; top:-${p1w*0.35}px; left:${size*0.15}px; }
     #${id}::after  { width:${p2w}px; height:${p2w*0.7}px; top:-${p2w*0.2}px;  left:${size*0.45}px; }
   `;
-  document.head.appendChild(before);
+  document.head.appendChild(st);
   document.body.appendChild(c);
 
   const duration = 30000 + Math.random() * 40000;
   const dest = window.innerWidth + size;
   const start = performance.now();
-
   function drift(now) {
     const t = (now - start) / duration;
-    if (t > 1) { c.remove(); before.remove(); return; }
+    if (t > 1) { c.remove(); st.remove(); return; }
     c.style.left = (-size + t * (dest + size)) + 'px';
     requestAnimationFrame(drift);
   }
   requestAnimationFrame(drift);
 }
-
 for (let i = 0; i < 6; i++) setTimeout(() => spawnCloud(), i * 800);
 setInterval(spawnCloud, 6000 + Math.random() * 4000);
 
-/* =========  PLANES (always 2 visible, with skywriting)  ========= */
+/* =========  PLANES  ========= */
 let activePlanes = 0;
 let currentName = '';
 
-function getDisplayName() {
-  return currentName || 'Dude';
+function shouldWrite() {
+  return currentName.length >= 3;
 }
 
-function spawnPlane() {
-  if (activePlanes >= 2) return;
-  activePlanes++;
+/* --- Smoke puff trail --- */
+function emitSmokePuff(x, y) {
+  const puff = document.createElement('div');
+  puff.className = 'smoke-puff';
+  const size = 6 + Math.random() * 8;
+  puff.style.width = size + 'px';
+  puff.style.height = size + 'px';
+  puff.style.left = (x - size / 2 + (Math.random() - 0.5) * 6) + 'px';
+  puff.style.top  = (y - size / 2 + (Math.random() - 0.5) * 6) + 'px';
+  puff.style.opacity = '0.6';
+  document.body.appendChild(puff);
 
-  const wrapper = document.createElement('div');
-  wrapper.className = 'plane-wrapper';
+  const born = performance.now();
+  const life = 2000 + Math.random() * 1500;
+  function fade(now) {
+    const age = (now - born) / life;
+    if (age > 1) { puff.remove(); return; }
+    const s = size + age * 15;
+    puff.style.width  = s + 'px';
+    puff.style.height = s + 'px';
+    puff.style.opacity = String(0.6 * (1 - age));
+    requestAnimationFrame(fade);
+  }
+  requestAnimationFrame(fade);
+}
 
-  const icon = document.createElement('span');
-  icon.className = 'plane-icon';
+/* --- Smoke letter writing --- */
+function writeSmokeText(text) {
+  const letterW = 50;
+  const totalW = text.length * letterW;
+  const startX = (window.innerWidth - totalW) / 2;
+  const textY = 80 + Math.random() * (window.innerHeight * 0.2);
 
-  const goRight = Math.random() > 0.5;
-  icon.textContent = '\u2708\ufe0f';
-  icon.style.display = 'inline-block';
-  icon.style.transform = goRight ? 'scaleX(1)' : 'scaleX(-1)';
-
-  // Skywriting text trail
-  const skyText = document.createElement('span');
-  skyText.className = 'sky-text';
-  const name = getDisplayName();
-  skyText.textContent = name;
-
-  if (goRight) {
-    skyText.style.right = '60px';
-    skyText.style.top = '18px';
-  } else {
-    skyText.style.left = '60px';
-    skyText.style.top = '18px';
+  const letters = [];
+  for (let i = 0; i < text.length; i++) {
+    const el = document.createElement('div');
+    el.className = 'smoke-letter';
+    el.textContent = text[i].toUpperCase();
+    el.style.left = (startX + i * letterW) + 'px';
+    el.style.top  = textY + 'px';
+    el.style.opacity = '0';
+    el.style.transform = 'scale(0.3)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    document.body.appendChild(el);
+    letters.push(el);
   }
 
+  return {
+    letters,
+    startX,
+    textY,
+    totalW,
+    letterW,
+    reveal(index) {
+      if (index < letters.length) {
+        letters[index].style.opacity = '1';
+        letters[index].style.transform = 'scale(1)';
+      }
+    },
+    fadeOut() {
+      letters.forEach(l => {
+        l.style.transition = 'opacity 3s ease, transform 3s ease, filter 3s ease';
+        l.style.opacity = '0';
+        l.style.transform = 'scale(1.3)';
+        l.style.filter = 'blur(8px)';
+      });
+      setTimeout(() => letters.forEach(l => l.remove()), 3500);
+    }
+  };
+}
+
+/* --- Free-flying dynamic plane --- */
+function spawnFreePlane() {
+  activePlanes++;
+  const wrapper = document.createElement('div');
+  wrapper.className = 'plane-wrapper';
+  const icon = document.createElement('span');
+  icon.className = 'plane-icon';
+  icon.textContent = '\u2708\ufe0f';
   wrapper.appendChild(icon);
-  wrapper.appendChild(skyText);
 
-  // Dynamic vertical movement
-  const baseTop = 30 + Math.random() * (window.innerHeight * 0.3);
-  const amplitude = 20 + Math.random() * 40;
-  const frequency = 0.3 + Math.random() * 0.5;
-  const tiltAmount = 3 + Math.random() * 5;
+  const goRight = Math.random() > 0.5;
+  const baseTop = 40 + Math.random() * (window.innerHeight * 0.35);
 
-  const startX = goRight ? -250 : window.innerWidth + 250;
-  const endX   = goRight ? window.innerWidth + 250 : -250;
+  // Multiple wave layers for organic flight
+  const w1 = { amp: 30 + Math.random() * 50, freq: 0.4 + Math.random() * 0.6 };
+  const w2 = { amp: 15 + Math.random() * 25, freq: 1.2 + Math.random() * 1.0 };
+  const w3 = { amp: 8  + Math.random() * 12, freq: 2.5 + Math.random() * 1.5 };
+
+  const startX = goRight ? -100 : window.innerWidth + 100;
+  const endX   = goRight ? window.innerWidth + 100 : -100;
   wrapper.style.left = startX + 'px';
   wrapper.style.top  = baseTop + 'px';
   document.body.appendChild(wrapper);
 
-  const duration = 14000 + Math.random() * 8000;
+  const duration = 10000 + Math.random() * 8000;
   const start = performance.now();
-
-  // Fade in the skywriting text
-  skyText.style.opacity = '0';
-  skyText.style.transition = 'opacity 0.8s';
-  setTimeout(() => { skyText.style.opacity = '1'; }, 500);
+  let lastPuff = 0;
+  let prevY = baseTop;
 
   function fly(now) {
-    const elapsed = now - start;
-    const t = elapsed / duration;
-    if (t > 1) {
+    const t = (now - start) / duration;
+    if (t > 1 || (shouldWrite() && t > 0.1)) {
       wrapper.remove();
       activePlanes--;
-      spawnPlane();
+      if (shouldWrite()) spawnWritingPlane();
+      else spawnFreePlane();
       return;
     }
 
-    // Horizontal position
     const x = startX + t * (endX - startX);
+    const y = baseTop
+      + Math.sin(t * Math.PI * 2 * w1.freq) * w1.amp
+      + Math.sin(t * Math.PI * 2 * w2.freq) * w2.amp
+      + Math.sin(t * Math.PI * 2 * w3.freq) * w3.amp;
 
-    // Dynamic vertical wave
-    const wave = Math.sin(t * Math.PI * 2 * frequency) * amplitude;
-    const y = baseTop + wave;
-
-    // Tilt based on vertical movement direction
-    const waveSlope = Math.cos(t * Math.PI * 2 * frequency) * amplitude * frequency;
-    const tilt = (goRight ? 1 : -1) * Math.atan2(waveSlope, 200) * (180 / Math.PI) * tiltAmount;
+    const dy = y - prevY;
+    prevY = y;
+    const bankAngle = (goRight ? 1 : -1) * Math.atan2(dy, 8) * (180 / Math.PI);
 
     wrapper.style.left = x + 'px';
     wrapper.style.top  = y + 'px';
-    icon.style.transform = `scaleX(${goRight ? 1 : -1}) rotate(${tilt}deg)`;
+    icon.style.transform = `scaleX(${goRight ? 1 : -1}) rotate(${bankAngle}deg)`;
 
-    // Fade out skywriting gradually
-    const fadeStart = 0.6;
-    if (t > fadeStart) {
-      skyText.style.opacity = String(1 - (t - fadeStart) / (1 - fadeStart));
+    // Emit small smoke puffs behind plane
+    if (now - lastPuff > 120) {
+      const puffX = goRight ? x : x + 50;
+      emitSmokePuff(puffX, y + 22);
+      lastPuff = now;
     }
 
     requestAnimationFrame(fly);
@@ -468,14 +518,100 @@ function spawnPlane() {
   requestAnimationFrame(fly);
 }
 
-// Launch 2 planes staggered
-spawnPlane();
-setTimeout(spawnPlane, 2000);
+/* --- Writing plane that writes the name in smoke --- */
+function spawnWritingPlane() {
+  if (!shouldWrite()) { spawnFreePlane(); return; }
+  activePlanes++;
 
-// Safety: ensure 2 planes always exist
-setInterval(() => {
-  while (activePlanes < 2) spawnPlane();
-}, 3000);
+  const text = currentName;
+  const smokeText = writeSmokeText(text);
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'plane-wrapper';
+  const icon = document.createElement('span');
+  icon.className = 'plane-icon';
+  icon.textContent = '\u2708\ufe0f';
+  wrapper.appendChild(icon);
+
+  const startX = smokeText.startX - 120;
+  const endX   = smokeText.startX + smokeText.totalW + 120;
+  const flyY   = smokeText.textY + 25;
+
+  wrapper.style.left = startX + 'px';
+  wrapper.style.top  = flyY + 'px';
+  document.body.appendChild(wrapper);
+
+  const duration = 4000 + text.length * 600;
+  const start = performance.now();
+  let lastRevealed = -1;
+  let lastPuff = 0;
+  let prevY2 = flyY;
+
+  function fly(now) {
+    const t = (now - start) / duration;
+
+    if (t > 1) {
+      wrapper.remove();
+      activePlanes--;
+      setTimeout(() => smokeText.fadeOut(), 2000);
+      setTimeout(() => {
+        if (shouldWrite()) spawnWritingPlane();
+        else spawnFreePlane();
+      }, 4000);
+      return;
+    }
+
+    const x = startX + t * (endX - startX);
+    const wave = Math.sin(t * Math.PI * 6) * 8 + Math.sin(t * Math.PI * 14) * 3;
+    const y = flyY + wave;
+    const dy = y - prevY2;
+    prevY2 = y;
+    const bank = Math.atan2(dy, 10) * (180 / Math.PI);
+
+    wrapper.style.left = x + 'px';
+    wrapper.style.top  = y + 'px';
+    icon.style.transform = `rotate(${bank}deg)`;
+
+    // Reveal letters as plane passes over them
+    const writeStart = 0.08;
+    const writeEnd = 0.92;
+    if (t >= writeStart && t <= writeEnd) {
+      const writeT = (t - writeStart) / (writeEnd - writeStart);
+      const letterIdx = Math.floor(writeT * text.length);
+      if (letterIdx > lastRevealed && letterIdx < text.length) {
+        for (let i = lastRevealed + 1; i <= letterIdx; i++) {
+          smokeText.reveal(i);
+          const lx = smokeText.startX + i * smokeText.letterW + smokeText.letterW / 2;
+          const ly = smokeText.textY + 35;
+          for (let p = 0; p < 5; p++) {
+            emitSmokePuff(lx + (Math.random() - 0.5) * 40, ly + (Math.random() - 0.5) * 40);
+          }
+        }
+        lastRevealed = letterIdx;
+      }
+    }
+
+    if (now - lastPuff > 80) {
+      emitSmokePuff(x, y + 22);
+      lastPuff = now;
+    }
+
+    requestAnimationFrame(fly);
+  }
+  requestAnimationFrame(fly);
+}
+
+/* --- Ensure always 2 planes --- */
+function ensurePlanes() {
+  while (activePlanes < 2) {
+    if (shouldWrite()) spawnWritingPlane();
+    else spawnFreePlane();
+  }
+}
+
+spawnFreePlane();
+setTimeout(() => { if (activePlanes < 2) spawnFreePlane(); }, 2500);
+setInterval(ensurePlanes, 3000);
 
 /* =========  WELCOME TEXT  ========= */
 const welcome = document.getElementById('welcome');
@@ -486,7 +622,6 @@ welcome.addEventListener('click', () => {
   welcome.classList.remove('shiver');
   void welcome.offsetWidth;
   welcome.classList.add('shiver');
-
   const newX = 60 + Math.random() * (window.innerWidth - 400);
   const newY = 40 + Math.random() * (window.innerHeight - 160);
   welcome.style.left = newX + 'px';
