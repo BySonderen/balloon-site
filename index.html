@@ -30,7 +30,7 @@
     border-radius: 50%;
   }
 
-  /* ---- Plane ---- */
+  /* ---- Jet ---- */
   .plane-wrapper {
     position: absolute;
     pointer-events: none;
@@ -38,7 +38,7 @@
     z-index: 3;
   }
   .plane-icon {
-    font-size: 52px;
+    font-size: 48px;
     display: inline-block;
   }
 
@@ -49,6 +49,27 @@
     background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 50%, transparent 70%);
     pointer-events: none;
     z-index: 2;
+  }
+
+  /* ---- Explosion ---- */
+  .explosion-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 15;
+  }
+  .explosion-flash {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 14;
+    background: radial-gradient(circle, rgba(255,255,200,0.95) 0%, rgba(255,160,30,0.7) 30%, rgba(255,80,0,0.4) 60%, transparent 80%);
+  }
+  .debris {
+    position: absolute;
+    pointer-events: none;
+    z-index: 15;
+    font-size: 20px;
   }
 
   /* ---- Smoke text ---- */
@@ -182,82 +203,64 @@
   #nameInput::placeholder { color: #7f8c8d; font-weight: normal; }
   #nameInput:focus { border-color: #e0243a; }
 
-  /* ---- Sun ---- */
+  /* ---- Realistic Sun ---- */
   #sun {
     position: absolute;
-    top: 40px;
-    right: 80px;
-    width: 120px;
-    height: 120px;
-    z-index: 2;
+    top: -40px;
+    right: 40px;
+    width: 200px;
+    height: 200px;
+    z-index: 1;
+    pointer-events: none;
   }
-  .sun-body {
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle at 40% 40%, #fff4a3, #f9d71c 40%, #f0a500);
+  .sun-core {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    position: relative;
-    box-shadow: 0 0 40px 15px rgba(249,215,28,0.35), 0 0 80px 30px rgba(249,215,28,0.15);
+    background: radial-gradient(circle at 45% 45%,
+      #fffef5 0%,
+      #fff7d4 15%,
+      #ffe566 35%,
+      #ffc107 55%,
+      #ff9800 75%,
+      rgba(255,152,0,0) 100%
+    );
+    box-shadow:
+      0 0 60px 30px rgba(255,235,100,0.4),
+      0 0 120px 60px rgba(255,200,50,0.2),
+      0 0 200px 100px rgba(255,180,0,0.1);
+    animation: sunPulse 4s ease-in-out infinite;
   }
-  .sun-ray {
+  .sun-haze {
     position: absolute;
-    width: 8px;
-    height: 25px;
-    background: #f9d71c;
-    border-radius: 4px;
-    top: 50%;
-    left: 50%;
-    transform-origin: center -35px;
-    opacity: 0.6;
-  }
-  .sun-face { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
-  .sun-eye {
-    position: absolute;
-    top: 40px;
-    width: 12px;
-    height: 14px;
-    background: #5d4037;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
     border-radius: 50%;
-    transition: transform 0.15s;
+    background: radial-gradient(circle,
+      rgba(255,245,180,0.15) 0%,
+      rgba(255,220,100,0.08) 40%,
+      transparent 70%
+    );
+    animation: sunHaze 6s ease-in-out infinite alternate;
   }
-  .sun-eye.left { left: 35px; }
-  .sun-eye.right { right: 35px; }
-  .sun-eye.wink { height: 3px; border-radius: 3px; top: 46px; }
-  .sun-mouth {
-    position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 35px;
-    height: 16px;
-    border-bottom: 4px solid #5d4037;
-    border-radius: 0 0 20px 20px;
+  @keyframes sunPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.03); opacity: 0.95; }
   }
-  .sun-cheek {
-    position: absolute;
-    top: 52px;
-    width: 16px;
-    height: 10px;
-    background: rgba(255,120,100,0.35);
-    border-radius: 50%;
+  @keyframes sunHaze {
+    0%   { transform: scale(1) rotate(0deg); opacity: 0.6; }
+    100% { transform: scale(1.1) rotate(10deg); opacity: 0.8; }
   }
-  .sun-cheek.left { left: 22px; }
-  .sun-cheek.right { right: 22px; }
 </style>
 </head>
 <body>
 
-<!-- Sun -->
+<!-- Realistic Sun -->
 <div id="sun">
-  <div class="sun-body">
-    <div class="sun-face">
-      <div class="sun-eye left" id="sunEyeL"></div>
-      <div class="sun-eye right" id="sunEyeR"></div>
-      <div class="sun-mouth"></div>
-      <div class="sun-cheek left"></div>
-      <div class="sun-cheek right"></div>
-    </div>
-  </div>
+  <div class="sun-haze"></div>
+  <div class="sun-core"></div>
 </div>
 
 <!-- Welcome Text -->
@@ -277,24 +280,6 @@
 </div>
 
 <script>
-/* =========  SUN RAYS  ========= */
-const sunBody = document.querySelector('.sun-body');
-for (let i = 0; i < 12; i++) {
-  const ray = document.createElement('div');
-  ray.className = 'sun-ray';
-  ray.style.transform = `rotate(${i * 30}deg) translateY(-82px)`;
-  sunBody.appendChild(ray);
-}
-
-/* =========  SUN WINK  ========= */
-const eyeR = document.getElementById('sunEyeR');
-function sunWink() {
-  eyeR.classList.add('wink');
-  setTimeout(() => eyeR.classList.remove('wink'), 400);
-  setTimeout(sunWink, 4000 + Math.random() * 6000);
-}
-setTimeout(sunWink, 3000);
-
 /* =========  BALLOON MOVEMENT  ========= */
 const balloon = document.getElementById('balloon');
 const bBody   = document.getElementById('balloonBody');
@@ -374,15 +359,16 @@ function spawnCloud() {
 for (let i = 0; i < 6; i++) setTimeout(() => spawnCloud(), i * 800);
 setInterval(spawnCloud, 6000 + Math.random() * 4000);
 
-/* =========  PLANES  ========= */
+/* =========  FIGHTER JETS  ========= */
 let activePlanes = 0;
 let currentName = '';
+const jets = [];
 
 function shouldWrite() {
   return currentName.length >= 3;
 }
 
-/* --- Smoke puff trail --- */
+/* --- Smoke puff --- */
 function emitSmokePuff(x, y) {
   const puff = document.createElement('div');
   puff.className = 'smoke-puff';
@@ -408,6 +394,115 @@ function emitSmokePuff(x, y) {
   requestAnimationFrame(fade);
 }
 
+/* --- EXPLOSION --- */
+function explode(x, y) {
+  const flash = document.createElement('div');
+  flash.className = 'explosion-flash';
+  flash.style.width = '10px';
+  flash.style.height = '10px';
+  flash.style.left = (x - 5) + 'px';
+  flash.style.top  = (y - 5) + 'px';
+  document.body.appendChild(flash);
+
+  const flashBorn = performance.now();
+  function animFlash(now) {
+    const age = (now - flashBorn) / 800;
+    if (age > 1) { flash.remove(); return; }
+    const s = 10 + age * 180;
+    flash.style.width  = s + 'px';
+    flash.style.height = s + 'px';
+    flash.style.left = (x - s / 2) + 'px';
+    flash.style.top  = (y - s / 2) + 'px';
+    flash.style.opacity = String(1 - age);
+    requestAnimationFrame(animFlash);
+  }
+  requestAnimationFrame(animFlash);
+
+  const colors = ['#ff4400','#ff8800','#ffcc00','#ff6600','#ffaa00','#333','#555'];
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'explosion-particle';
+    const sz = 4 + Math.random() * 10;
+    p.style.width  = sz + 'px';
+    p.style.height = sz + 'px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.left = x + 'px';
+    p.style.top  = y + 'px';
+    document.body.appendChild(p);
+
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 80 + Math.random() * 200;
+    const vx = Math.cos(angle) * speed;
+    const vy = Math.sin(angle) * speed;
+    const born = performance.now();
+    const life = 600 + Math.random() * 800;
+
+    function animP(now) {
+      const age = (now - born) / life;
+      if (age > 1) { p.remove(); return; }
+      p.style.left = (x + vx * age) + 'px';
+      p.style.top  = (y + vy * age + 150 * age * age) + 'px';
+      p.style.opacity = String(1 - age);
+      const s2 = sz * (1 - age * 0.5);
+      p.style.width  = s2 + 'px';
+      p.style.height = s2 + 'px';
+      requestAnimationFrame(animP);
+    }
+    requestAnimationFrame(animP);
+  }
+
+  const debrisChars = ['\u{1f4a5}','\u{1f525}','\u{1f4a8}','\u26a1'];
+  for (let i = 0; i < 6; i++) {
+    const d = document.createElement('div');
+    d.className = 'debris';
+    d.textContent = debrisChars[Math.floor(Math.random() * debrisChars.length)];
+    d.style.left = x + 'px';
+    d.style.top  = y + 'px';
+    document.body.appendChild(d);
+
+    const angle = Math.random() * Math.PI * 2;
+    const spd = 60 + Math.random() * 160;
+    const dvx = Math.cos(angle) * spd;
+    const dvy = Math.sin(angle) * spd;
+    const born = performance.now();
+
+    function animD(now) {
+      const age = (now - born) / 1200;
+      if (age > 1) { d.remove(); return; }
+      d.style.left = (x + dvx * age) + 'px';
+      d.style.top  = (y + dvy * age + 200 * age * age) + 'px';
+      d.style.opacity = String(1 - age);
+      d.style.transform = `rotate(${age * 720}deg) scale(${1 + age})`;
+      requestAnimationFrame(animD);
+    }
+    requestAnimationFrame(animD);
+  }
+
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      emitSmokePuff(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
+    }, 200 + Math.random() * 400);
+  }
+}
+
+/* --- Collision detection --- */
+function checkCollisions(jet) {
+  for (let i = jets.length - 1; i >= 0; i--) {
+    const other = jets[i];
+    if (other === jet || other.dead || jet.dead) continue;
+    const dx = jet.x - other.x;
+    const dy = jet.y - other.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 60) {
+      jet.dead = true;
+      other.dead = true;
+      explode((jet.x + other.x) / 2, (jet.y + other.y) / 2);
+      return true;
+    }
+  }
+  return false;
+}
+
 /* --- Smoke letter writing --- */
 function writeSmokeText(text) {
   const letterW = 75;
@@ -430,11 +525,7 @@ function writeSmokeText(text) {
   }
 
   return {
-    letters,
-    startX,
-    textY,
-    totalW,
-    letterW,
+    letters, startX, textY, totalW, letterW,
     reveal(index) {
       if (index < letters.length) {
         letters[index].style.opacity = '1';
@@ -453,20 +544,19 @@ function writeSmokeText(text) {
   };
 }
 
-/* --- Free-flying dynamic plane --- */
-function spawnFreePlane() {
+/* --- Free-flying fighter jet --- */
+function spawnFreeJet() {
   activePlanes++;
   const wrapper = document.createElement('div');
   wrapper.className = 'plane-wrapper';
   const icon = document.createElement('span');
   icon.className = 'plane-icon';
-  icon.textContent = '\u2708\ufe0f';
+  icon.textContent = '\u{1F6E9}\ufe0f';
   wrapper.appendChild(icon);
 
   const goRight = Math.random() > 0.5;
   const baseTop = 40 + Math.random() * (window.innerHeight * 0.35);
 
-  // Multiple wave layers for organic flight
   const w1 = { amp: 30 + Math.random() * 50, freq: 0.4 + Math.random() * 0.6 };
   const w2 = { amp: 15 + Math.random() * 25, freq: 1.2 + Math.random() * 1.0 };
   const w3 = { amp: 8  + Math.random() * 12, freq: 2.5 + Math.random() * 1.5 };
@@ -477,18 +567,30 @@ function spawnFreePlane() {
   wrapper.style.top  = baseTop + 'px';
   document.body.appendChild(wrapper);
 
+  const jet = { x: startX, y: baseTop, dead: false };
+  jets.push(jet);
+
   const duration = 10000 + Math.random() * 8000;
   const start = performance.now();
   let lastPuff = 0;
   let prevY = baseTop;
 
   function fly(now) {
+    if (jet.dead) {
+      wrapper.remove();
+      jets.splice(jets.indexOf(jet), 1);
+      activePlanes--;
+      setTimeout(() => spawnFreeJet(), 1500 + Math.random() * 1500);
+      return;
+    }
+
     const t = (now - start) / duration;
     if (t > 1 || (shouldWrite() && t > 0.1)) {
       wrapper.remove();
+      jets.splice(jets.indexOf(jet), 1);
       activePlanes--;
-      if (shouldWrite()) spawnWritingPlane();
-      else spawnFreePlane();
+      if (shouldWrite()) spawnWritingJet();
+      else spawnFreeJet();
       return;
     }
 
@@ -498,6 +600,9 @@ function spawnFreePlane() {
       + Math.sin(t * Math.PI * 2 * w2.freq) * w2.amp
       + Math.sin(t * Math.PI * 2 * w3.freq) * w3.amp;
 
+    jet.x = x + 25;
+    jet.y = y + 25;
+
     const dy = y - prevY;
     prevY = y;
     const bankAngle = (goRight ? 1 : -1) * Math.atan2(dy, 8) * (180 / Math.PI);
@@ -506,21 +611,20 @@ function spawnFreePlane() {
     wrapper.style.top  = y + 'px';
     icon.style.transform = `scaleX(${goRight ? 1 : -1}) rotate(${bankAngle}deg)`;
 
-    // Emit small smoke puffs behind plane
     if (now - lastPuff > 120) {
-      const puffX = goRight ? x : x + 50;
-      emitSmokePuff(puffX, y + 22);
+      emitSmokePuff(goRight ? x : x + 50, y + 22);
       lastPuff = now;
     }
 
+    checkCollisions(jet);
     requestAnimationFrame(fly);
   }
   requestAnimationFrame(fly);
 }
 
-/* --- Writing plane that writes the name in smoke --- */
-function spawnWritingPlane() {
-  if (!shouldWrite()) { spawnFreePlane(); return; }
+/* --- Writing jet --- */
+function spawnWritingJet() {
+  if (!shouldWrite()) { spawnFreeJet(); return; }
   activePlanes++;
 
   const text = currentName;
@@ -530,7 +634,7 @@ function spawnWritingPlane() {
   wrapper.className = 'plane-wrapper';
   const icon = document.createElement('span');
   icon.className = 'plane-icon';
-  icon.textContent = '\u2708\ufe0f';
+  icon.textContent = '\u{1F6E9}\ufe0f';
   wrapper.appendChild(icon);
 
   const startX = smokeText.startX - 120;
@@ -541,6 +645,9 @@ function spawnWritingPlane() {
   wrapper.style.top  = flyY + 'px';
   document.body.appendChild(wrapper);
 
+  const jet = { x: startX, y: flyY, dead: false };
+  jets.push(jet);
+
   const duration = 4000 + text.length * 600;
   const start = performance.now();
   let lastRevealed = -1;
@@ -548,15 +655,27 @@ function spawnWritingPlane() {
   let prevY2 = flyY;
 
   function fly(now) {
-    const t = (now - start) / duration;
+    if (jet.dead) {
+      wrapper.remove();
+      jets.splice(jets.indexOf(jet), 1);
+      activePlanes--;
+      smokeText.fadeOut();
+      setTimeout(() => {
+        if (shouldWrite()) spawnWritingJet();
+        else spawnFreeJet();
+      }, 1500);
+      return;
+    }
 
+    const t = (now - start) / duration;
     if (t > 1) {
       wrapper.remove();
+      jets.splice(jets.indexOf(jet), 1);
       activePlanes--;
       setTimeout(() => smokeText.fadeOut(), 2000);
       setTimeout(() => {
-        if (shouldWrite()) spawnWritingPlane();
-        else spawnFreePlane();
+        if (shouldWrite()) spawnWritingJet();
+        else spawnFreeJet();
       }, 4000);
       return;
     }
@@ -564,15 +683,16 @@ function spawnWritingPlane() {
     const x = startX + t * (endX - startX);
     const wave = Math.sin(t * Math.PI * 6) * 8 + Math.sin(t * Math.PI * 14) * 3;
     const y = flyY + wave;
+
+    jet.x = x + 25;
+    jet.y = y + 25;
+
     const dy = y - prevY2;
     prevY2 = y;
-    const bank = Math.atan2(dy, 10) * (180 / Math.PI);
-
     wrapper.style.left = x + 'px';
     wrapper.style.top  = y + 'px';
-    icon.style.transform = `rotate(${bank}deg)`;
+    icon.style.transform = `rotate(${Math.atan2(dy, 10) * (180 / Math.PI)}deg)`;
 
-    // Reveal letters as plane passes over them
     const writeStart = 0.08;
     const writeEnd = 0.92;
     if (t >= writeStart && t <= writeEnd) {
@@ -596,22 +716,101 @@ function spawnWritingPlane() {
       lastPuff = now;
     }
 
+    checkCollisions(jet);
     requestAnimationFrame(fly);
   }
   requestAnimationFrame(fly);
 }
 
-/* --- Ensure always 2 planes --- */
-function ensurePlanes() {
+/* --- Head-on collision pair --- */
+function spawnCollisionPair() {
+  if (activePlanes >= 2) return;
+  const collideY = 60 + Math.random() * (window.innerHeight * 0.3);
+
+  function launchOne(goRight) {
+    activePlanes++;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'plane-wrapper';
+    const icon = document.createElement('span');
+    icon.className = 'plane-icon';
+    icon.textContent = '\u{1F6E9}\ufe0f';
+    wrapper.appendChild(icon);
+
+    const startX = goRight ? -100 : window.innerWidth + 100;
+    const endX   = goRight ? window.innerWidth + 100 : -100;
+    wrapper.style.left = startX + 'px';
+    wrapper.style.top  = collideY + 'px';
+    document.body.appendChild(wrapper);
+
+    const jet = { x: startX, y: collideY, dead: false };
+    jets.push(jet);
+
+    const duration = 6000 + Math.random() * 3000;
+    const start = performance.now();
+    let lastPuff = 0;
+    const wobAmp = 5 + Math.random() * 10;
+    const wobFreq = 1 + Math.random() * 2;
+
+    function fly(now) {
+      if (jet.dead) {
+        wrapper.remove();
+        jets.splice(jets.indexOf(jet), 1);
+        activePlanes--;
+        setTimeout(() => spawnFreeJet(), 1500 + Math.random() * 1500);
+        return;
+      }
+      const t = (now - start) / duration;
+      if (t > 1) {
+        wrapper.remove();
+        jets.splice(jets.indexOf(jet), 1);
+        activePlanes--;
+        spawnFreeJet();
+        return;
+      }
+      const x = startX + t * (endX - startX);
+      const y = collideY + Math.sin(t * Math.PI * 2 * wobFreq) * wobAmp;
+      jet.x = x + 25;
+      jet.y = y + 25;
+      const dy = Math.cos(t * Math.PI * 2 * wobFreq) * wobAmp * wobFreq * 0.02;
+      const bank = (goRight ? 1 : -1) * Math.atan2(dy, 1) * (180 / Math.PI) * 3;
+      wrapper.style.left = x + 'px';
+      wrapper.style.top  = y + 'px';
+      icon.style.transform = `scaleX(${goRight ? 1 : -1}) rotate(${bank}deg)`;
+      if (now - lastPuff > 100) {
+        emitSmokePuff(goRight ? x : x + 50, y + 22);
+        lastPuff = now;
+      }
+      checkCollisions(jet);
+      requestAnimationFrame(fly);
+    }
+    requestAnimationFrame(fly);
+  }
+
+  launchOne(true);
+  launchOne(false);
+}
+
+/* --- Ensure always 2 jets --- */
+function ensureJets() {
   while (activePlanes < 2) {
-    if (shouldWrite()) spawnWritingPlane();
-    else spawnFreePlane();
+    if (shouldWrite()) spawnWritingJet();
+    else spawnFreeJet();
   }
 }
 
-spawnFreePlane();
-setTimeout(() => { if (activePlanes < 2) spawnFreePlane(); }, 2500);
-setInterval(ensurePlanes, 3000);
+spawnFreeJet();
+setTimeout(() => { if (activePlanes < 2) spawnFreeJet(); }, 2500);
+setInterval(ensureJets, 3000);
+
+// Random collision events every 15-30s
+function scheduleCollision() {
+  setTimeout(() => {
+    jets.forEach(j => { j.dead = true; });
+    setTimeout(() => spawnCollisionPair(), 500);
+    scheduleCollision();
+  }, 15000 + Math.random() * 15000);
+}
+scheduleCollision();
 
 /* =========  WELCOME TEXT  ========= */
 const welcome = document.getElementById('welcome');
