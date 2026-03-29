@@ -30,65 +30,6 @@
     border-radius: 50%;
   }
 
-  /* ---- Jet ---- */
-  .plane-wrapper {
-    position: absolute;
-    pointer-events: none;
-    user-select: none;
-    z-index: 3;
-  }
-  .plane-icon {
-    font-size: 48px;
-    display: inline-block;
-  }
-
-  /* ---- Smoke puffs ---- */
-  .smoke-puff {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 50%, transparent 70%);
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* ---- Explosion ---- */
-  .explosion-particle {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 15;
-  }
-  .explosion-flash {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 14;
-    background: radial-gradient(circle, rgba(255,255,200,0.95) 0%, rgba(255,160,30,0.7) 30%, rgba(255,80,0,0.4) 60%, transparent 80%);
-  }
-  .debris {
-    position: absolute;
-    pointer-events: none;
-    z-index: 15;
-    font-size: 20px;
-  }
-
-  /* ---- Smoke text ---- */
-  .smoke-letter {
-    position: absolute;
-    font-size: 72px;
-    font-weight: 900;
-    font-family: 'Arial Black', Arial, sans-serif;
-    color: transparent;
-    background: radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.7) 60%, transparent 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: blur(1.5px);
-    pointer-events: none;
-    z-index: 2;
-    user-select: none;
-    text-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.4);
-  }
-
   /* ---- Balloon ---- */
   #balloon {
     position: absolute;
@@ -139,137 +80,59 @@
   }
   .pop { animation: pop 0.35s ease-out; }
 
-  /* ---- Welcome Text ---- */
-  #welcome {
+  /* ---- Mermaid ---- */
+  .mermaid {
     position: absolute;
-    font-size: 48px;
-    font-weight: bold;
-    color: #2c3e50;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
-    cursor: pointer;
-    z-index: 5;
-    user-select: none;
-    transition: left 0.6s ease, top 0.6s ease;
-  }
-
-  @keyframes shiver {
-    0%   { transform: translate(0, 0) rotate(0deg); }
-    5%   { transform: translate(-6px, 4px) rotate(-4deg); }
-    10%  { transform: translate(7px, -3px) rotate(5deg); }
-    15%  { transform: translate(-5px, -6px) rotate(-3deg); }
-    20%  { transform: translate(6px, 5px) rotate(4deg); }
-    25%  { transform: translate(-8px, 2px) rotate(-5deg); }
-    30%  { transform: translate(5px, -5px) rotate(3deg); }
-    35%  { transform: translate(-4px, 7px) rotate(-4deg); }
-    40%  { transform: translate(7px, -2px) rotate(5deg); }
-    45%  { transform: translate(-6px, -4px) rotate(-3deg); }
-    50%  { transform: translate(8px, 3px) rotate(4deg); }
-    55%  { transform: translate(-5px, 6px) rotate(-5deg); }
-    60%  { transform: translate(6px, -6px) rotate(3deg); }
-    65%  { transform: translate(-7px, 2px) rotate(-4deg); }
-    70%  { transform: translate(4px, 5px) rotate(5deg); }
-    75%  { transform: translate(-6px, -3px) rotate(-3deg); }
-    80%  { transform: translate(7px, 4px) rotate(4deg); }
-    85%  { transform: translate(-5px, -5px) rotate(-5deg); }
-    90%  { transform: translate(6px, 3px) rotate(3deg); }
-    95%  { transform: translate(-4px, -2px) rotate(-2deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-  }
-  .shiver { animation: shiver 0.8s ease-in-out; }
-
-  /* ---- Name Input ---- */
-  #nameField {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 20;
-    text-align: center;
-  }
-  #nameInput {
-    padding: 10px 20px;
-    font-size: 18px;
-    border: 3px solid rgba(255,255,255,0.7);
-    border-radius: 25px;
-    background: rgba(255,255,255,0.5);
-    backdrop-filter: blur(8px);
-    outline: none;
-    color: #2c3e50;
-    font-weight: bold;
-    text-align: center;
-    width: 260px;
-    transition: border-color 0.3s;
-  }
-  #nameInput::placeholder { color: #7f8c8d; font-weight: normal; }
-  #nameInput:focus { border-color: #e0243a; }
-
-  /* ---- Realistic Sun ---- */
-  #sun {
-    position: absolute;
-    top: -40px;
-    right: 40px;
-    width: 200px;
-    height: 200px;
-    z-index: 1;
+    font-size: 64px;
     pointer-events: none;
+    user-select: none;
+    z-index: 5;
+    transition: opacity 0.5s;
   }
-  .sun-core {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: radial-gradient(circle at 45% 45%,
-      #fffef5 0%,
-      #fff7d4 15%,
-      #ffe566 35%,
-      #ffc107 55%,
-      #ff9800 75%,
-      rgba(255,152,0,0) 100%
-    );
-    box-shadow:
-      0 0 60px 30px rgba(255,235,100,0.4),
-      0 0 120px 60px rgba(255,200,50,0.2),
-      0 0 200px 100px rgba(255,180,0,0.1);
-    animation: sunPulse 4s ease-in-out infinite;
-  }
-  .sun-haze {
+
+  /* ---- Lyric bubble ---- */
+  .lyric-bubble {
     position: absolute;
-    top: -30%;
-    left: -30%;
-    width: 160%;
-    height: 160%;
-    border-radius: 50%;
-    background: radial-gradient(circle,
-      rgba(255,245,180,0.15) 0%,
-      rgba(255,220,100,0.08) 40%,
-      transparent 70%
-    );
-    animation: sunHaze 6s ease-in-out infinite alternate;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    border-radius: 18px;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    color: #2c3e50;
+    pointer-events: none;
+    z-index: 6;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    max-width: 320px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.4;
   }
-  @keyframes sunPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50%      { transform: scale(1.03); opacity: 0.95; }
+  .lyric-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(255, 255, 255, 0.85);
   }
-  @keyframes sunHaze {
-    0%   { transform: scale(1) rotate(0deg); opacity: 0.6; }
-    100% { transform: scale(1.1) rotate(10deg); opacity: 0.8; }
+
+  /* ---- Musical notes ---- */
+  .music-note {
+    position: absolute;
+    font-size: 24px;
+    pointer-events: none;
+    z-index: 7;
+    user-select: none;
+    opacity: 0;
   }
 </style>
 </head>
 <body>
-
-<!-- Realistic Sun -->
-<div id="sun">
-  <div class="sun-haze"></div>
-  <div class="sun-core"></div>
-</div>
-
-<!-- Welcome Text -->
-<div id="welcome">Welcome Dude!</div>
-
-<!-- Name Input -->
-<div id="nameField">
-  <input type="text" id="nameInput" placeholder="Enter your name..." maxlength="20">
-</div>
 
 <!-- Balloon -->
 <div id="balloon">
@@ -321,519 +184,222 @@ balloon.addEventListener('click', () => {
   bBody.classList.add('pop');
 });
 
-/* =========  CLOUDS  ========= */
-function spawnCloud() {
+/* =========  CLOUDS (more prevalent)  ========= */
+const cloudElements = [];
+
+function spawnCloud(startRandom) {
   const c = document.createElement('div');
   c.className = 'cloud';
-  const size = 60 + Math.random() * 100;
-  const top  = Math.random() * (window.innerHeight * 0.55);
+  const size = 80 + Math.random() * 150;
+  const top  = Math.random() * (window.innerHeight * 0.7);
   c.style.width  = size + 'px';
   c.style.height = size * 0.6 + 'px';
   c.style.top    = top + 'px';
-  c.style.left   = -size + 'px';
-  c.style.opacity = 0.7 + Math.random() * 0.25;
+  c.style.left   = startRandom ? (Math.random() * window.innerWidth) + 'px' : -size + 'px';
+  c.style.opacity = 0.75 + Math.random() * 0.2;
 
   const st = document.createElement('style');
   const id = 'c' + Math.random().toString(36).slice(2, 8);
   c.id = id;
-  const p1w = size * (0.5 + Math.random() * 0.3);
-  const p2w = size * (0.4 + Math.random() * 0.3);
+  const p1w = size * (0.5 + Math.random() * 0.4);
+  const p2w = size * (0.4 + Math.random() * 0.4);
   st.textContent = `
-    #${id}::before { width:${p1w}px; height:${p1w*0.7}px; top:-${p1w*0.35}px; left:${size*0.15}px; }
-    #${id}::after  { width:${p2w}px; height:${p2w*0.7}px; top:-${p2w*0.2}px;  left:${size*0.45}px; }
+    #${id}::before { width:${p1w}px; height:${p1w*0.65}px; top:-${p1w*0.3}px; left:${size*0.12}px; }
+    #${id}::after  { width:${p2w}px; height:${p2w*0.65}px; top:-${p2w*0.18}px; left:${size*0.4}px; }
   `;
   document.head.appendChild(st);
   document.body.appendChild(c);
 
-  const duration = 30000 + Math.random() * 40000;
+  const cloudObj = { el: c, top, size };
+  cloudElements.push(cloudObj);
+
+  const duration = 35000 + Math.random() * 35000;
   const dest = window.innerWidth + size;
+  const startLeft = parseFloat(c.style.left);
   const start = performance.now();
   function drift(now) {
     const t = (now - start) / duration;
-    if (t > 1) { c.remove(); st.remove(); return; }
-    c.style.left = (-size + t * (dest + size)) + 'px';
+    if (t > 1) {
+      c.remove(); st.remove();
+      const idx = cloudElements.indexOf(cloudObj);
+      if (idx > -1) cloudElements.splice(idx, 1);
+      return;
+    }
+    c.style.left = (startLeft + t * (dest - startLeft + size)) + 'px';
     requestAnimationFrame(drift);
   }
   requestAnimationFrame(drift);
 }
-for (let i = 0; i < 6; i++) setTimeout(() => spawnCloud(), i * 800);
-setInterval(spawnCloud, 6000 + Math.random() * 4000);
 
-/* =========  FIGHTER JETS  ========= */
-let activePlanes = 0;
-let currentName = '';
-const jets = [];
+// Many initial clouds spread across screen
+for (let i = 0; i < 14; i++) setTimeout(() => spawnCloud(true), i * 300);
+// Continuous spawning, faster rate
+setInterval(spawnCloud, 3000 + Math.random() * 2000);
 
-function shouldWrite() {
-  return currentName.length >= 3;
-}
+/* =========  MERMAIDS  ========= */
+const lyrics = [
+  "I wanna be where the people are",
+  "I wanna see, wanna see them dancin'",
+  "Walking around on those, what do you call 'em?",
+  "Oh, feet!",
+  "Flippin' your fins, you don't get too far",
+  "Legs are required for jumping, dancing",
+  "Strolling along down a, what's that word again?",
+  "Street!",
+  "Up where they walk, up where they run",
+  "Up where they stay all day in the sun",
+  "Wanderin' free, wish I could be",
+  "Part of that world",
+  "What would I give if I could live out of these waters?",
+  "What would I pay to spend a day warm on the sand?",
+  "Bet'cha on land they understand",
+  "Bet they don't reprimand their daughters",
+  "Bright young women, sick of swimmin'",
+  "Ready to stand!",
+  "I'm ready to know what the people know",
+  "Ask 'em my questions and get some answers",
+  "What's a fire and why does it, what's the word?",
+  "Burn!",
+  "When's it my turn?",
+  "Wouldn't I love, love to explore that shore up above?",
+  "Out of the sea, wish I could be",
+  "Part of that world",
+];
+let lyricIndex = 0;
 
-/* --- Smoke puff --- */
-function emitSmokePuff(x, y) {
-  const puff = document.createElement('div');
-  puff.className = 'smoke-puff';
-  const size = 6 + Math.random() * 8;
-  puff.style.width = size + 'px';
-  puff.style.height = size + 'px';
-  puff.style.left = (x - size / 2 + (Math.random() - 0.5) * 6) + 'px';
-  puff.style.top  = (y - size / 2 + (Math.random() - 0.5) * 6) + 'px';
-  puff.style.opacity = '0.6';
-  document.body.appendChild(puff);
+const mermaidEmojis = ['\u{1F9DC}\u200D\u2640\uFE0F', '\u{1F9DC}'];
+const noteChars = ['\u{1F3B5}', '\u{1F3B6}', '\u266A', '\u266B'];
+
+function spawnMusicNote(x, y) {
+  const note = document.createElement('div');
+  note.className = 'music-note';
+  note.textContent = noteChars[Math.floor(Math.random() * noteChars.length)];
+  note.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
+  note.style.top  = y + 'px';
+  note.style.opacity = '0';
+  document.body.appendChild(note);
 
   const born = performance.now();
   const life = 2000 + Math.random() * 1500;
-  function fade(now) {
+  const driftX = (Math.random() - 0.5) * 60;
+
+  function anim(now) {
     const age = (now - born) / life;
-    if (age > 1) { puff.remove(); return; }
-    const s = size + age * 15;
-    puff.style.width  = s + 'px';
-    puff.style.height = s + 'px';
-    puff.style.opacity = String(0.6 * (1 - age));
-    requestAnimationFrame(fade);
+    if (age > 1) { note.remove(); return; }
+    note.style.left = (x + driftX * age + (Math.random() - 0.5) * 2) + 'px';
+    note.style.top  = (y - age * 80) + 'px';
+    note.style.opacity = age < 0.15 ? String(age / 0.15) : String(1 - (age - 0.15) / 0.85);
+    note.style.transform = `rotate(${(Math.random() - 0.5) * 30}deg) scale(${0.8 + age * 0.5})`;
+    requestAnimationFrame(anim);
   }
-  requestAnimationFrame(fade);
+  requestAnimationFrame(anim);
 }
 
-/* --- EXPLOSION --- */
-function explode(x, y) {
-  const flash = document.createElement('div');
-  flash.className = 'explosion-flash';
-  flash.style.width = '10px';
-  flash.style.height = '10px';
-  flash.style.left = (x - 5) + 'px';
-  flash.style.top  = (y - 5) + 'px';
-  document.body.appendChild(flash);
+function spawnMermaid() {
+  if (cloudElements.length === 0) return;
 
-  const flashBorn = performance.now();
-  function animFlash(now) {
-    const age = (now - flashBorn) / 800;
-    if (age > 1) { flash.remove(); return; }
-    const s = 10 + age * 180;
-    flash.style.width  = s + 'px';
-    flash.style.height = s + 'px';
-    flash.style.left = (x - s / 2) + 'px';
-    flash.style.top  = (y - s / 2) + 'px';
-    flash.style.opacity = String(1 - age);
-    requestAnimationFrame(animFlash);
-  }
-  requestAnimationFrame(animFlash);
+  // Pick a random cloud to emerge from
+  const cloud = cloudElements[Math.floor(Math.random() * cloudElements.length)];
+  const cloudRect = cloud.el.getBoundingClientRect();
 
-  const colors = ['#ff4400','#ff8800','#ffcc00','#ff6600','#ffaa00','#333','#555'];
-  for (let i = 0; i < 25; i++) {
-    const p = document.createElement('div');
-    p.className = 'explosion-particle';
-    const sz = 4 + Math.random() * 10;
-    p.style.width  = sz + 'px';
-    p.style.height = sz + 'px';
-    p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.left = x + 'px';
-    p.style.top  = y + 'px';
-    document.body.appendChild(p);
+  const mermaid = document.createElement('div');
+  mermaid.className = 'mermaid';
+  mermaid.textContent = mermaidEmojis[Math.floor(Math.random() * mermaidEmojis.length)];
 
-    const angle = Math.random() * Math.PI * 2;
-    const speed = 80 + Math.random() * 200;
-    const vx = Math.cos(angle) * speed;
-    const vy = Math.sin(angle) * speed;
-    const born = performance.now();
-    const life = 600 + Math.random() * 800;
+  const mx = cloudRect.left + cloudRect.width * 0.3 + Math.random() * cloudRect.width * 0.4;
+  const my = cloudRect.top + cloudRect.height * 0.2;
 
-    function animP(now) {
-      const age = (now - born) / life;
-      if (age > 1) { p.remove(); return; }
-      p.style.left = (x + vx * age) + 'px';
-      p.style.top  = (y + vy * age + 150 * age * age) + 'px';
-      p.style.opacity = String(1 - age);
-      const s2 = sz * (1 - age * 0.5);
-      p.style.width  = s2 + 'px';
-      p.style.height = s2 + 'px';
-      requestAnimationFrame(animP);
-    }
-    requestAnimationFrame(animP);
+  mermaid.style.left = mx + 'px';
+  mermaid.style.top  = my + 'px';
+  mermaid.style.opacity = '0';
+  document.body.appendChild(mermaid);
+
+  // Lyric bubble
+  const bubble = document.createElement('div');
+  bubble.className = 'lyric-bubble';
+  const lyric = lyrics[lyricIndex % lyrics.length];
+  lyricIndex++;
+  bubble.textContent = lyric;
+  bubble.style.left = (mx - 60) + 'px';
+  bubble.style.top  = (my - 60) + 'px';
+  bubble.style.opacity = '0';
+  bubble.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  bubble.style.transform = 'translateY(10px)';
+  document.body.appendChild(bubble);
+
+  // Sing with SpeechSynthesis
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(lyric);
+    utter.rate = 0.85;
+    utter.pitch = 1.4;
+    utter.volume = 0.7;
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v =>
+      /female|samantha|karen|victoria|zira|hazel/i.test(v.name)
+    ) || voices.find(v => /en/i.test(v.lang)) || voices[0];
+    if (femaleVoice) utter.voice = femaleVoice;
+    speechSynthesis.speak(utter);
   }
 
-  const debrisChars = ['\u{1f4a5}','\u{1f525}','\u{1f4a8}','\u26a1'];
-  for (let i = 0; i < 6; i++) {
-    const d = document.createElement('div');
-    d.className = 'debris';
-    d.textContent = debrisChars[Math.floor(Math.random() * debrisChars.length)];
-    d.style.left = x + 'px';
-    d.style.top  = y + 'px';
-    document.body.appendChild(d);
+  const born = performance.now();
+  const duration = 6000 + lyric.length * 60;
+  let lastNote = 0;
+  let revealed = false;
 
-    const angle = Math.random() * Math.PI * 2;
-    const spd = 60 + Math.random() * 160;
-    const dvx = Math.cos(angle) * spd;
-    const dvy = Math.sin(angle) * spd;
-    const born = performance.now();
-
-    function animD(now) {
-      const age = (now - born) / 1200;
-      if (age > 1) { d.remove(); return; }
-      d.style.left = (x + dvx * age) + 'px';
-      d.style.top  = (y + dvy * age + 200 * age * age) + 'px';
-      d.style.opacity = String(1 - age);
-      d.style.transform = `rotate(${age * 720}deg) scale(${1 + age})`;
-      requestAnimationFrame(animD);
-    }
-    requestAnimationFrame(animD);
-  }
-
-  for (let i = 0; i < 12; i++) {
-    setTimeout(() => {
-      emitSmokePuff(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
-    }, 200 + Math.random() * 400);
-  }
-}
-
-/* --- Collision detection --- */
-function checkCollisions(jet) {
-  for (let i = jets.length - 1; i >= 0; i--) {
-    const other = jets[i];
-    if (other === jet || other.dead || jet.dead) continue;
-    const dx = jet.x - other.x;
-    const dy = jet.y - other.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 60) {
-      jet.dead = true;
-      other.dead = true;
-      explode((jet.x + other.x) / 2, (jet.y + other.y) / 2);
-      return true;
-    }
-  }
-  return false;
-}
-
-/* --- Smoke letter writing --- */
-function writeSmokeText(text) {
-  const letterW = 75;
-  const totalW = text.length * letterW;
-  const startX = (window.innerWidth - totalW) / 2;
-  const textY = 80 + Math.random() * (window.innerHeight * 0.2);
-
-  const letters = [];
-  for (let i = 0; i < text.length; i++) {
-    const el = document.createElement('div');
-    el.className = 'smoke-letter';
-    el.textContent = text[i].toUpperCase();
-    el.style.left = (startX + i * letterW) + 'px';
-    el.style.top  = textY + 'px';
-    el.style.opacity = '0';
-    el.style.transform = 'scale(0.3)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    document.body.appendChild(el);
-    letters.push(el);
-  }
-
-  return {
-    letters, startX, textY, totalW, letterW,
-    reveal(index) {
-      if (index < letters.length) {
-        letters[index].style.opacity = '1';
-        letters[index].style.transform = 'scale(1)';
-      }
-    },
-    fadeOut() {
-      letters.forEach(l => {
-        l.style.transition = 'opacity 3s ease, transform 3s ease, filter 3s ease';
-        l.style.opacity = '0';
-        l.style.transform = 'scale(1.3)';
-        l.style.filter = 'blur(8px)';
-      });
-      setTimeout(() => letters.forEach(l => l.remove()), 3500);
-    }
-  };
-}
-
-/* --- Free-flying fighter jet --- */
-function spawnFreeJet() {
-  activePlanes++;
-  const wrapper = document.createElement('div');
-  wrapper.className = 'plane-wrapper';
-  const icon = document.createElement('span');
-  icon.className = 'plane-icon';
-  icon.textContent = '\u{1F6E9}\ufe0f';
-  wrapper.appendChild(icon);
-
-  const goRight = Math.random() > 0.5;
-  const baseTop = 40 + Math.random() * (window.innerHeight * 0.35);
-
-  const w1 = { amp: 30 + Math.random() * 50, freq: 0.4 + Math.random() * 0.6 };
-  const w2 = { amp: 15 + Math.random() * 25, freq: 1.2 + Math.random() * 1.0 };
-  const w3 = { amp: 8  + Math.random() * 12, freq: 2.5 + Math.random() * 1.5 };
-
-  const startX = goRight ? -100 : window.innerWidth + 100;
-  const endX   = goRight ? window.innerWidth + 100 : -100;
-  wrapper.style.left = startX + 'px';
-  wrapper.style.top  = baseTop + 'px';
-  document.body.appendChild(wrapper);
-
-  const jet = { x: startX, y: baseTop, dead: false };
-  jets.push(jet);
-
-  const duration = 10000 + Math.random() * 8000;
-  const start = performance.now();
-  let lastPuff = 0;
-  let prevY = baseTop;
-
-  function fly(now) {
-    if (jet.dead) {
-      wrapper.remove();
-      jets.splice(jets.indexOf(jet), 1);
-      activePlanes--;
-      setTimeout(() => spawnFreeJet(), 1500 + Math.random() * 1500);
+  function anim(now) {
+    const age = (now - born) / duration;
+    if (age > 1) {
+      mermaid.remove();
+      bubble.remove();
       return;
     }
 
-    const t = (now - start) / duration;
-    if (t > 1 || (shouldWrite() && t > 0.1)) {
-      wrapper.remove();
-      jets.splice(jets.indexOf(jet), 1);
-      activePlanes--;
-      if (shouldWrite()) spawnWritingJet();
-      else spawnFreeJet();
-      return;
+    let yOff, opacity;
+    if (age < 0.15) {
+      const t = age / 0.15;
+      yOff = (1 - t) * 40;
+      opacity = t;
+    } else if (age < 0.8) {
+      yOff = Math.sin((age - 0.15) * Math.PI * 4) * 6;
+      opacity = 1;
+    } else {
+      const t = (age - 0.8) / 0.2;
+      yOff = t * 40;
+      opacity = 1 - t;
     }
 
-    const x = startX + t * (endX - startX);
-    const y = baseTop
-      + Math.sin(t * Math.PI * 2 * w1.freq) * w1.amp
-      + Math.sin(t * Math.PI * 2 * w2.freq) * w2.amp
-      + Math.sin(t * Math.PI * 2 * w3.freq) * w3.amp;
+    mermaid.style.top = (my + yOff) + 'px';
+    mermaid.style.opacity = String(opacity);
 
-    jet.x = x + 25;
-    jet.y = y + 25;
+    if (age > 0.1 && !revealed) {
+      bubble.style.opacity = '1';
+      bubble.style.transform = 'translateY(0)';
+      revealed = true;
+    }
+    if (age > 0.7) {
+      bubble.style.opacity = String(Math.max(0, (0.85 - age) / 0.15));
+    }
+    bubble.style.top = (my - 60 + yOff) + 'px';
 
-    const dy = y - prevY;
-    prevY = y;
-    const bankAngle = (goRight ? 1 : -1) * Math.atan2(dy, 8) * (180 / Math.PI);
-
-    wrapper.style.left = x + 'px';
-    wrapper.style.top  = y + 'px';
-    icon.style.transform = `scaleX(${goRight ? 1 : -1}) rotate(${bankAngle}deg)`;
-
-    if (now - lastPuff > 120) {
-      emitSmokePuff(goRight ? x : x + 50, y + 22);
-      lastPuff = now;
+    if (now - lastNote > 400 && age > 0.08 && age < 0.75) {
+      spawnMusicNote(mx + 30, my + yOff - 10);
+      lastNote = now;
     }
 
-    checkCollisions(jet);
-    requestAnimationFrame(fly);
+    requestAnimationFrame(anim);
   }
-  requestAnimationFrame(fly);
+  requestAnimationFrame(anim);
 }
 
-/* --- Writing jet --- */
-function spawnWritingJet() {
-  if (!shouldWrite()) { spawnFreeJet(); return; }
-  activePlanes++;
-
-  const text = currentName;
-  const smokeText = writeSmokeText(text);
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'plane-wrapper';
-  const icon = document.createElement('span');
-  icon.className = 'plane-icon';
-  icon.textContent = '\u{1F6E9}\ufe0f';
-  wrapper.appendChild(icon);
-
-  const startX = smokeText.startX - 120;
-  const endX   = smokeText.startX + smokeText.totalW + 120;
-  const flyY   = smokeText.textY + 25;
-
-  wrapper.style.left = startX + 'px';
-  wrapper.style.top  = flyY + 'px';
-  document.body.appendChild(wrapper);
-
-  const jet = { x: startX, y: flyY, dead: false };
-  jets.push(jet);
-
-  const duration = 4000 + text.length * 600;
-  const start = performance.now();
-  let lastRevealed = -1;
-  let lastPuff = 0;
-  let prevY2 = flyY;
-
-  function fly(now) {
-    if (jet.dead) {
-      wrapper.remove();
-      jets.splice(jets.indexOf(jet), 1);
-      activePlanes--;
-      smokeText.fadeOut();
-      setTimeout(() => {
-        if (shouldWrite()) spawnWritingJet();
-        else spawnFreeJet();
-      }, 1500);
-      return;
-    }
-
-    const t = (now - start) / duration;
-    if (t > 1) {
-      wrapper.remove();
-      jets.splice(jets.indexOf(jet), 1);
-      activePlanes--;
-      setTimeout(() => smokeText.fadeOut(), 2000);
-      setTimeout(() => {
-        if (shouldWrite()) spawnWritingJet();
-        else spawnFreeJet();
-      }, 4000);
-      return;
-    }
-
-    const x = startX + t * (endX - startX);
-    const wave = Math.sin(t * Math.PI * 6) * 8 + Math.sin(t * Math.PI * 14) * 3;
-    const y = flyY + wave;
-
-    jet.x = x + 25;
-    jet.y = y + 25;
-
-    const dy = y - prevY2;
-    prevY2 = y;
-    wrapper.style.left = x + 'px';
-    wrapper.style.top  = y + 'px';
-    icon.style.transform = `rotate(${Math.atan2(dy, 10) * (180 / Math.PI)}deg)`;
-
-    const writeStart = 0.08;
-    const writeEnd = 0.92;
-    if (t >= writeStart && t <= writeEnd) {
-      const writeT = (t - writeStart) / (writeEnd - writeStart);
-      const letterIdx = Math.floor(writeT * text.length);
-      if (letterIdx > lastRevealed && letterIdx < text.length) {
-        for (let i = lastRevealed + 1; i <= letterIdx; i++) {
-          smokeText.reveal(i);
-          const lx = smokeText.startX + i * smokeText.letterW + smokeText.letterW / 2;
-          const ly = smokeText.textY + 35;
-          for (let p = 0; p < 5; p++) {
-            emitSmokePuff(lx + (Math.random() - 0.5) * 40, ly + (Math.random() - 0.5) * 40);
-          }
-        }
-        lastRevealed = letterIdx;
-      }
-    }
-
-    if (now - lastPuff > 80) {
-      emitSmokePuff(x, y + 22);
-      lastPuff = now;
-    }
-
-    checkCollisions(jet);
-    requestAnimationFrame(fly);
-  }
-  requestAnimationFrame(fly);
+// Ensure voices are loaded
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 }
 
-/* --- Head-on collision pair --- */
-function spawnCollisionPair() {
-  if (activePlanes >= 2) return;
-  const collideY = 60 + Math.random() * (window.innerHeight * 0.3);
-
-  function launchOne(goRight) {
-    activePlanes++;
-    const wrapper = document.createElement('div');
-    wrapper.className = 'plane-wrapper';
-    const icon = document.createElement('span');
-    icon.className = 'plane-icon';
-    icon.textContent = '\u{1F6E9}\ufe0f';
-    wrapper.appendChild(icon);
-
-    const startX = goRight ? -100 : window.innerWidth + 100;
-    const endX   = goRight ? window.innerWidth + 100 : -100;
-    wrapper.style.left = startX + 'px';
-    wrapper.style.top  = collideY + 'px';
-    document.body.appendChild(wrapper);
-
-    const jet = { x: startX, y: collideY, dead: false };
-    jets.push(jet);
-
-    const duration = 6000 + Math.random() * 3000;
-    const start = performance.now();
-    let lastPuff = 0;
-    const wobAmp = 5 + Math.random() * 10;
-    const wobFreq = 1 + Math.random() * 2;
-
-    function fly(now) {
-      if (jet.dead) {
-        wrapper.remove();
-        jets.splice(jets.indexOf(jet), 1);
-        activePlanes--;
-        setTimeout(() => spawnFreeJet(), 1500 + Math.random() * 1500);
-        return;
-      }
-      const t = (now - start) / duration;
-      if (t > 1) {
-        wrapper.remove();
-        jets.splice(jets.indexOf(jet), 1);
-        activePlanes--;
-        spawnFreeJet();
-        return;
-      }
-      const x = startX + t * (endX - startX);
-      const y = collideY + Math.sin(t * Math.PI * 2 * wobFreq) * wobAmp;
-      jet.x = x + 25;
-      jet.y = y + 25;
-      const dy = Math.cos(t * Math.PI * 2 * wobFreq) * wobAmp * wobFreq * 0.02;
-      const bank = (goRight ? 1 : -1) * Math.atan2(dy, 1) * (180 / Math.PI) * 3;
-      wrapper.style.left = x + 'px';
-      wrapper.style.top  = y + 'px';
-      icon.style.transform = `scaleX(${goRight ? 1 : -1}) rotate(${bank}deg)`;
-      if (now - lastPuff > 100) {
-        emitSmokePuff(goRight ? x : x + 50, y + 22);
-        lastPuff = now;
-      }
-      checkCollisions(jet);
-      requestAnimationFrame(fly);
-    }
-    requestAnimationFrame(fly);
-  }
-
-  launchOne(true);
-  launchOne(false);
-}
-
-/* --- Ensure always 2 jets --- */
-function ensureJets() {
-  while (activePlanes < 2) {
-    if (shouldWrite()) spawnWritingJet();
-    else spawnFreeJet();
-  }
-}
-
-spawnFreeJet();
-setTimeout(() => { if (activePlanes < 2) spawnFreeJet(); }, 2500);
-setInterval(ensureJets, 3000);
-
-// Random collision events every 15-30s
-function scheduleCollision() {
-  setTimeout(() => {
-    jets.forEach(j => { j.dead = true; });
-    setTimeout(() => spawnCollisionPair(), 500);
-    scheduleCollision();
-  }, 15000 + Math.random() * 15000);
-}
-scheduleCollision();
-
-/* =========  WELCOME TEXT  ========= */
-const welcome = document.getElementById('welcome');
-welcome.style.left = (window.innerWidth / 2 - 150) + 'px';
-welcome.style.top = (window.innerHeight / 2 - 30) + 'px';
-
-welcome.addEventListener('click', () => {
-  welcome.classList.remove('shiver');
-  void welcome.offsetWidth;
-  welcome.classList.add('shiver');
-  const newX = 60 + Math.random() * (window.innerWidth - 400);
-  const newY = 40 + Math.random() * (window.innerHeight - 160);
-  welcome.style.left = newX + 'px';
-  welcome.style.top = newY + 'px';
-});
-
-/* =========  NAME INPUT  ========= */
-const nameInput = document.getElementById('nameInput');
-nameInput.addEventListener('input', () => {
-  const name = nameInput.value.trim();
-  currentName = name;
-  welcome.textContent = name ? `Welcome ${name}!` : 'Welcome Dude!';
-});
+// Spawn mermaids regularly
+setTimeout(spawnMermaid, 2000);
+setInterval(spawnMermaid, 5000 + Math.random() * 3000);
 
 /* =========  RESIZE SAFETY  ========= */
 window.addEventListener('resize', pickTarget);
